@@ -60,13 +60,13 @@ def _build_conflicts_int(
 
 
 def _solve_by_int(
-  seccion_counts: list[int],
+  section_counts: list[int],
   conflicts: list[tuple[tuple[int, int], tuple[int, int]]],
 ) -> list[tuple[int, ...]]:
   model = cp_model.CpModel()
   # Variables
   course_vars: list[cp_model.IntVar] = []
-  for i, sections in enumerate(seccion_counts):
+  for i, sections in enumerate(section_counts):
     # Definimos el dominio (secciones) de la variable (curso)
     course_vars.append(model.new_int_var(0, sections - 1, f'course_{i}'))
 
@@ -101,8 +101,8 @@ def _ints_to_uuid(
 def solve(
   course_sections_schedule: dict[UUID, list[tuple[UUID, str]]],
 ) -> list[tuple[UUID, ...]]:
-  course_sections, seccion_counts, conflicts = _build_conflicts_int(
+  course_sections, section_counts, conflicts = _build_conflicts_int(
     course_sections_schedule
   )
-  combinations = _solve_by_int(seccion_counts, conflicts)
+  combinations = _solve_by_int(section_counts, conflicts)
   return _ints_to_uuid(course_sections, combinations)
